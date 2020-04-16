@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Hangfire;
 using Hangfire.SqlServer;
+using HangFire.Demo1.Models.commom;
 
 namespace HangFire.Demo1
 {
@@ -38,7 +39,8 @@ namespace HangFire.Demo1
                 UsePageLocksOnDequeue = true,
                 DisableGlobalLocks = true
             }));
-
+            services.Configure<DefaultConnections>(configuration.GetSection("DbConnections"));
+            services.AddScoped<ITestDbManger,TestDbManger>();
             services.AddHangfireServer();
             services.AddControllers(); 
         }

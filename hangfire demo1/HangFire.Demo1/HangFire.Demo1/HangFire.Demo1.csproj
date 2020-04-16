@@ -5,9 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\ERPConnetionForQT\**" />
+    <Content Remove="Models\ERPConnetionForQT\**" />
+    <EmbeddedResource Remove="Models\ERPConnetionForQT\**" />
+    <None Remove="Models\ERPConnetionForQT\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\commom\BusinessDbUtil.cs" />
+    <Compile Remove="Models\commom\InvoicesManage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.11" />
     <PackageReference Include="Hangfire.Core" Version="1.7.11" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.11" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

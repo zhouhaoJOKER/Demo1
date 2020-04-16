@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using HangFire.Demo1.Services;
+using HangFire.Demo1.Models.commom;
+using Newtonsoft.Json;
 
 namespace HangFire.Demo1.Controllers
 {
@@ -14,12 +16,14 @@ namespace HangFire.Demo1.Controllers
     {
         private readonly IBackgroundJobClient jobClient;
         private readonly IRecurringJobManager recurringJobManager;
+        private readonly ITestDbManger testDbManger;
 
         public HomeController(IBackgroundJobClient jobClient
-            ,IRecurringJobManager recurringJobManager)
+            ,IRecurringJobManager recurringJobManager,ITestDbManger testDbManger)
         {
             this.jobClient = jobClient;
             this.recurringJobManager = recurringJobManager;
+            this.testDbManger = testDbManger;
         }
         [HttpGet(nameof(getName))]
         public async Task<string> getName() 
@@ -37,7 +41,10 @@ namespace HangFire.Demo1.Controllers
         public void AddBackGroundJob_Two(string jobDescription)
         {
             var test = new TestModel();
-            this.jobClient.Enqueue(() => test.WriteInfo(jobDescription));
+            string sql = "select top 10 spdm,spmc from shangpin";
+            var spdms = JsonConvert.SerializeObject(testDbManger.FillData(sql));
+
+            this.jobClient.Enqueue(() => test.WriteInfo(spdms));
         }
 
         [HttpGet(nameof(AddRecurringJob)+"/{content}")]
