@@ -27,7 +27,7 @@ namespace HangFire.Demo1.Controllers
         }
         [HttpGet(nameof(getName))]
         public async Task<string> getName() 
-        {
+        { 
             return await Task.Run(() => nameof(getName)).ConfigureAwait(false) ;        
         }
 
