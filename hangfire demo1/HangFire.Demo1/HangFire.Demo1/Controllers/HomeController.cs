@@ -16,14 +16,14 @@ namespace HangFire.Demo1.Controllers
     {
         private readonly IBackgroundJobClient jobClient;
         private readonly IRecurringJobManager recurringJobManager;
-        private readonly ITestDbManger testDbManger;
+        private readonly ITestDbManager testDbManager;
 
         public HomeController(IBackgroundJobClient jobClient
-            ,IRecurringJobManager recurringJobManager,ITestDbManger testDbManger)
+            ,IRecurringJobManager recurringJobManager,ITestDbManager testDbManager)
         {
             this.jobClient = jobClient;
             this.recurringJobManager = recurringJobManager;
-            this.testDbManger = testDbManger;
+            this.testDbManager = testDbManager;
         }
         [HttpGet(nameof(getName))]
         public async Task<string> getName() 
@@ -42,7 +42,7 @@ namespace HangFire.Demo1.Controllers
         {
             var test = new TestModel();
             string sql = "select top 10 spdm,spmc from shangpin";
-            var spdms = JsonConvert.SerializeObject(testDbManger.FillData(sql));
+            var spdms = JsonConvert.SerializeObject(testDbManager.FillData(sql));
 
             this.jobClient.Enqueue(() => test.WriteInfo(spdms));
         }

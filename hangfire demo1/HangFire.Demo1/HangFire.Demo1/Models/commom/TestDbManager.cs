@@ -8,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace HangFire.Demo1.Models.commom
 {
-    public class TestDbManger : ITestDbManger
+    public class TestDbManager : ITestDbManager
     {
         private readonly DefaultConnections DefaultConnections;
 
-        public TestDbManger(IConfiguration configuration)
+        public TestDbManager(IConfiguration configuration)
         {
             this.DefaultConnections = configuration.GetSection("DbConnections").Get<DefaultConnections>();
         }

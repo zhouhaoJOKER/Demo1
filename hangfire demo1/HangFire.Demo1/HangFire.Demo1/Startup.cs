@@ -40,7 +40,9 @@ namespace HangFire.Demo1
                 DisableGlobalLocks = true
             }));
             services.Configure<DefaultConnections>(configuration.GetSection("DbConnections"));
-            services.AddScoped<ITestDbManger,TestDbManger>();
+            services.AddScoped<ITestDbManager,TestDbManager>();
+            services.AddScoped<IOfficalDbManager, OfficalDbManager>();
+            services.AddMemoryCache();
             services.AddHangfireServer();
             services.AddControllers(); 
         }
@@ -58,7 +60,8 @@ namespace HangFire.Demo1
             app.UseRouting(); 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                //这个可以不需要
+                //endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name:"default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

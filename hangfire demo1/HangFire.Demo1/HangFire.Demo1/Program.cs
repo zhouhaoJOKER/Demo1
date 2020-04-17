@@ -21,6 +21,12 @@ namespace HangFire.Demo1
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging(builder =>
+                {
+                    builder.AddFilter("Microsoft",LogLevel.Information);
+                    builder.SetMinimumLevel(LogLevel.Trace); 
+                    builder.AddLog4Net();
                 });
     }
 }
