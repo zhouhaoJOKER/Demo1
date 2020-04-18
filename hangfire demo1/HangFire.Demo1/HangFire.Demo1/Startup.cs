@@ -40,8 +40,10 @@ namespace HangFire.Demo1
                 DisableGlobalLocks = true
             }));
             services.Configure<DefaultConnections>(configuration.GetSection("DbConnections"));
+            services.Configure<RedisConnections>(configuration.GetSection("RedisConnections"));
             services.AddScoped<ITestDbManager,TestDbManager>();
             services.AddScoped<IOfficalDbManager, OfficalDbManager>();
+            services.AddScoped<RedisHelpr>();
             services.AddMemoryCache();
             services.AddHangfireServer();
             services.AddControllers(); 
