@@ -87,7 +87,6 @@ D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debu
 D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
 D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\obj\Debug\netcoreapp3.1\HangFire.Demo1.csproj.CoreCompileInputs.cache
 D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\obj\Debug\netcoreapp3.1\HangFire.Demo1.MvcApplicationPartsAssemblyInfo.cache
-D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\obj\Debug\netcoreapp3.1\HangFire.Demo1.csprojAssemblyReference.cache
 D:\工作内容\project\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\工作内容\project\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\appsettings.json
 D:\工作内容\project\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
@@ -146,3 +145,13 @@ D:\工作内容\project\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\D
 D:\工作内容\project\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\工作内容\project\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\obj\Debug\netcoreapp3.1\HangFire.Demo1.csproj.CoreCompileInputs.cache
 D:\工作内容\project\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\obj\Debug\netcoreapp3.1\HangFire.Demo1.MvcApplicationPartsAssemblyInfo.cache
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\Pipelines.Sockets.Unofficial.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\StackExchange.Redis.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\System.Diagnostics.PerformanceCounter.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\bin\Debug\netcoreapp3.1\TopSdk.dll
+D:\Project\MyProject\Demo1\hangfire demo1\HangFire.Demo1\HangFire.Demo1\obj\Debug\netcoreapp3.1\HangFire.Demo1.csprojAssemblyReference.cache

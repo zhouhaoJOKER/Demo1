@@ -5,15 +5,36 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\ERPConnetionForQT\**" />
-    <Content Remove="Models\ERPConnetionForQT\**" />
-    <EmbeddedResource Remove="Models\ERPConnetionForQT\**" />
-    <None Remove="Models\ERPConnetionForQT\**" />
+    <Compile Remove="Models\ERPConnetionForQT\set\中台创建单据\**" />
+    <Compile Remove="Models\ERPConnetionForQT\set\中台库存变更\**" />
+    <Compile Remove="Models\ERPConnetionForQT\set\中台库存同步\**" />
+    <Compile Remove="Models\ERPConnetionForQT\set\蜻蜓创建单据\**" />
+    <Compile Remove="Models\ERPConnetionForQT\set\蜻蜓库存变更\**" />
+    <Compile Remove="Models\ERPConnetionForQT\set\蜻蜓消息接收\**" />
+    <Content Remove="Models\ERPConnetionForQT\set\中台创建单据\**" />
+    <Content Remove="Models\ERPConnetionForQT\set\中台库存变更\**" />
+    <Content Remove="Models\ERPConnetionForQT\set\中台库存同步\**" />
+    <Content Remove="Models\ERPConnetionForQT\set\蜻蜓创建单据\**" />
+    <Content Remove="Models\ERPConnetionForQT\set\蜻蜓库存变更\**" />
+    <Content Remove="Models\ERPConnetionForQT\set\蜻蜓消息接收\**" />
+    <EmbeddedResource Remove="Models\ERPConnetionForQT\set\中台创建单据\**" />
+    <EmbeddedResource Remove="Models\ERPConnetionForQT\set\中台库存变更\**" />
+    <EmbeddedResource Remove="Models\ERPConnetionForQT\set\中台库存同步\**" />
+    <EmbeddedResource Remove="Models\ERPConnetionForQT\set\蜻蜓创建单据\**" />
+    <EmbeddedResource Remove="Models\ERPConnetionForQT\set\蜻蜓库存变更\**" />
+    <EmbeddedResource Remove="Models\ERPConnetionForQT\set\蜻蜓消息接收\**" />
+    <None Remove="Models\ERPConnetionForQT\set\中台创建单据\**" />
+    <None Remove="Models\ERPConnetionForQT\set\中台库存变更\**" />
+    <None Remove="Models\ERPConnetionForQT\set\中台库存同步\**" />
+    <None Remove="Models\ERPConnetionForQT\set\蜻蜓创建单据\**" />
+    <None Remove="Models\ERPConnetionForQT\set\蜻蜓库存变更\**" />
+    <None Remove="Models\ERPConnetionForQT\set\蜻蜓消息接收\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Models\commom\BusinessDbUtil.cs" />
     <Compile Remove="Models\commom\InvoicesManage.cs" />
+    <Compile Remove="Models\ERPConnetionForQT\set\商品档案同步\SetSearchOnlineGoodsInfoByAccurate.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +44,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="3.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.30" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TopSdk">
+      <HintPath>libs\TopSdk.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

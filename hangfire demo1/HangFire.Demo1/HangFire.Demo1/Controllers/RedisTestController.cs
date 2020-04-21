@@ -11,9 +11,9 @@ namespace HangFire.Demo1.Controllers
     [ApiController]
     public class RedisTestController : ControllerBase
     {
-        private readonly RedisHelpr redisHelpr;
+        private readonly RedisHelper redisHelpr;
 
-        public RedisTestController(RedisHelpr redisHelpr)
+        public RedisTestController(RedisHelper redisHelpr)
         {
             this.redisHelpr = redisHelpr;
         }

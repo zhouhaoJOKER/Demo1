@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace HangFire.Demo1.Models.commom
 {
-    public class RedisHelpr
+    public class RedisHelper
     {
         private readonly IDatabase redisDb;
 
-        public RedisHelpr(IConfiguration configuration)
+        public RedisHelper(IConfiguration configuration)
         {
             var RedisConnections = configuration.GetSection("RedisConnections").Get<RedisConnections>();
             var redis = ConnectionMultiplexer.Connect(RedisConnections.DefaultRedisConnection);

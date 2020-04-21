@@ -63,6 +63,7 @@ namespace HangFire.Demo1.Controllers
         public void TriggerJob(string jobId)
         {
             recurringJobManager.Trigger(jobId);
-        }
+        } 
+
     }
 }

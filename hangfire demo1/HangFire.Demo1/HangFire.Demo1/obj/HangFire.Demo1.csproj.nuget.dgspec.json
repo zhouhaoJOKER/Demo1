@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\工作内容\\project\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj": {}
+    "D:\\Project\\MyProject\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj": {}
   },
   "projects": {
-    "D:\\工作内容\\project\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj": {
+    "D:\\Project\\MyProject\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\工作内容\\project\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj",
+        "projectUniqueName": "D:\\Project\\MyProject\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj",
         "projectName": "HangFire.Demo1",
-        "projectPath": "D:\\工作内容\\project\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\工作内容\\project\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\obj\\",
+        "projectPath": "D:\\Project\\MyProject\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\HangFire.Demo1.csproj",
+        "packagesPath": "C:\\Users\\Joker\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\MyProject\\Demo1\\hangfire demo1\\HangFire.Demo1\\HangFire.Demo1\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Joker\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +25,9 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.cdn.azure.cn/v3/index.json": {},
+          "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
           "netcoreapp3.1": {

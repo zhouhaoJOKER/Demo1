@@ -1,12 +1,4 @@
-﻿using BSERP.Connectors.Efast.Interface;
-using BSERP.Connectors.Efast.Log;
-using BSERP.Connectors.Efast.Services;
-using BSERP.Connectors.Efast.Util;
-using ERPApiService.Business.ERPConnetionIWMS.entity;
-using ERPApiService.Common.Business;
-using ERPApiService.Common.helper;
-using ERPApiService.Common.Object;
-using HangFire.Demo1.Models.ERPConnetionForQT.entity;
+﻿using HangFire.Demo1.Models.ERPConnetionForQT.entity;
 using System;
 using System.Collections.Generic;
 using System.Data;

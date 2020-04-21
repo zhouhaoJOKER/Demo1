@@ -1,9 +1,15 @@
-﻿using HangFire.Demo1.Models.ERPConnetionForQT.entity;
+﻿using HangFire.Demo1.Models.commom;
+using HangFire.Demo1.Models.Entities;
+using HangFire.Demo1.Models.ERPConnetionForQT.entity;
 using HangFire.Demo1.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
+using Top.Api;
+using Top.Api.Request;
+using Top.Api.Response;
 
 namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 {
@@ -13,38 +19,35 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 	public class SetSearchOnlineGoodsInfo : IBillType
 	{
 		private readonly object Onlock = new object();
-		public string BillType
-		{
-			get
-			{
-				return "分页查询门店sku列表";
-			}
-		}
+		private readonly IOfficalDbManager officalDbManager;
+		private readonly ITestDbManager testDbManager;
+		private readonly ConfigUtil configUtil;
 
-		public string Description
+		public SetSearchOnlineGoodsInfo(
+			IOfficalDbManager officalDbManager,
+			ITestDbManager testDbManager,
+			ConfigUtil configUtil)
 		{
-			get
-			{
-				return "分⻚查询⻔店sku列表";
-			}
+			this.officalDbManager = officalDbManager;
+			this.testDbManager = testDbManager;
+			this.configUtil = configUtil;
 		}
 
 		public void Run()
 		{
-			string sql = "SELECT access_token,taobao_user_nick FROM AuthorizationToken_QT WHERE ISNULL(taobao_user_nick,'')<>'' GROUP BY access_token,taobao_user_nick";
-			DataTable userAccessToken_QT = InvoicesManage.GetUserAccessToken_QT(sql);
-			LogUtil.WriteInfo(this, "masterTable_Token : counts", "counts : " + userAccessToken_QT.Rows.Count);
-			foreach (DataRow current in userAccessToken_QT.AsEnumerable())
+			var userAccessToken_QT = this.officalDbManager.GetUserAccessToken_QT().ToList();
+			LogUtil.WriteInfo(this, "masterTable_Token : counts", "counts : " + userAccessToken_QT.Count);
+			foreach (AuthorizationToken_QT current_Token in userAccessToken_QT)
 			{
 				string pageSize = "50";
-				string text = "select top 1 previewId,nextId from storesku where taobao_user_nick='" + current["taobao_user_nick"].ToString() + "' order by ID desc";
+				string text = "select top 1 previewId,nextId from storesku where taobao_user_nick='" + current_Token.taobao_user_nick.ToString() + "' order by ID desc";
 				LogUtil.WriteInfo(this, "SetSearchOnlineGoodsInfo : 获取上次同步的日期", "sql : " + text);
-				DataTable dataTable = BusinessDbUtil.GetDataTable(text);
+				DataTable dataTable = this.testDbManager.FillData(text);
 				LogUtil.WriteError(this, "SetSearchOnlineGoodsInfo : masterTable", "sql : " + text);
-				string app_key = ConfigUtil.App_key;
-				string app_secret = ConfigUtil.App_secret;
-				string session = current["access_token"].ToString();
-				string iposApiUrl = ConfigUtil.IposApiUrl;
+				string app_key = configUtil.App_key;
+				string app_secret = configUtil.App_secret;
+				string session = current_Token.access_token.ToString();
+				string iposApiUrl = configUtil.IposApiUrl;
 				ITopClient topClient = new DefaultTopClient(iposApiUrl, app_key, app_secret, "json");
 				string text2 = "0";
 				string text3 = "0";
@@ -65,16 +68,16 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 						List<RetailIfashionSkuinfoListResponse.SkuInfoDomain> skuInfoList = retailIfashionSkuinfoListResponse.Result.Data.SkuInfoList;
 						text3 = retailIfashionSkuinfoListResponse.Result.Data.NextId.ToString();
 						DataTable dataTable2 = JsonHelper.SetDataTableFromQT<RetailIfashionSkuinfoListResponse.SkuInfoDomain>(skuInfoList, "storeskulist");
-						DbOperation dbOperation = new DbOperation(ConfigUtil.ConnectionString);
+					 
 						string strCmd = "select ID,store_id,item_id,sku_id,sku_bar_code,shop_name,seller_nick,item_title,item_pic,item_price,color,size,short_url,current_amount from storeskulist where 1=0";
-						DataTable dataTable3 = dbOperation.ExecuteQuery(strCmd).Tables[0];
+						DataTable dataTable3 = testDbManager.FillData(strCmd);
 						dataTable3.TableName = "storeskulist";
 						foreach (DataRow dataRow in dataTable2.Rows)
 						{
 							string sqlFlag = string.Format(@"select top 1 id from storeskulist where cast(store_id as varchar(50)) ='{0}' and cast(item_id as varchar(50))='{1}' and cast(sku_id as varchar(50)) ='{2}'
                                              ", dataRow["store_id"].ToString(), dataRow["item_id"].ToString(), dataRow["sku_id"].ToString());
 
-							var Flag = BusinessDbUtil.ExecuteScalar(sqlFlag);
+							var Flag = testDbManager.ExecuteScalar(sqlFlag);
 							//如果存在那就不能重复插入
 							if (Flag != null && Flag.ToString() != "") { continue; }
 							if (dataRow["item_id"] != null && dataRow["item_id"].ToString() != "" && dataRow["color"] != null && dataRow["color"].ToString() != "" && dataRow["size"] != null & dataRow["size"].ToString() != "")
@@ -269,7 +272,7 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 								{
 									try
 									{
-										dbOperation.ExecuteNonQuery(stringBuilder.ToString());
+										testDbManager.ExecuteNonQuery(stringBuilder.ToString());
 									}
 									catch (Exception ex)
 									{
@@ -324,17 +327,17 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 																shopinfo.SL = dataRow3["current_amount"].ToString();
 																shopinfo.ZDR = "QT";
 																dic = DataTableBusiness.SetBusinessDataTable<Regulation>(shopinfo, TableName, "Regulation", TableName, out DJBH);
-																dicMX = DataTableBusiness.SetEntryOrderDetail_QT_2(DJBH, TableName, dataRow3, dataRow3["store_id"].ToString());
-																YanShouInfo infoYS = new YanShouInfo();
-																try
-																{
-																	infoYS = InvoicesManage.GetYsInfo(DJBH, TableName, "P_API_Oper_CKTZD_SH", "QT");
-																}
-																catch (Exception ex)
-																{
-																	LogUtil.WriteError(this, "库存调整单 执行失败P_API_Oper_CKTZD_SH ;DJBH:" + DJBH);
-																}
-																ListNameInfoYANSHOU.Add(infoYS);
+																//dicMX = DataTableBusiness.SetEntryOrderDetail_QT_2(DJBH, TableName, dataRow3, dataRow3["store_id"].ToString());
+																//YanShouInfo infoYS = new YanShouInfo();
+																//try
+																//{
+																//	infoYS = InvoicesManage.GetYsInfo(DJBH, TableName, "P_API_Oper_CKTZD_SH", "QT");
+																//}
+																//catch (Exception ex)
+																//{
+																//	LogUtil.WriteError(this, "库存调整单 执行失败P_API_Oper_CKTZD_SH ;DJBH:" + DJBH);
+																//}
+																//ListNameInfoYANSHOU.Add(infoYS);
 															}
 															if (dic.Count > 0 || dicMX.Count > 0)
 															{
@@ -344,25 +347,25 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 																	BusinessList.Add(dicMX);
 																}
 															}
-															if (BusinessList.Count > 0)
-															{
-																var resultList = DataTableBusiness.SavaBusinessData_SqlParameter(BusinessList, ListNameInfoYANSHOU);
-																if (resultList)
-																{
-																	sql = string.Format("UPDATE " + TableName + " SET JE=(SELECT SUM(JE) FROM " + TableName + "MX WHERE DJBH='{0}')" +
-																	",SL=(SELECT SUM(SL) FROM  " + TableName + "MX WHERE DJBH='{0}')WHERE DJBH='{0}'", DJBH);
-																	BusinessDbUtil.ExecuteNonQuery(sql);
-																	LogUtil.WriteInfo(this, string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH), string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH));
-																}
-																else
-																{
-																	LogUtil.WriteError(this, "仓库调整单保存失败");
-																}
-															}
-															else
-															{
-																LogUtil.WriteError(this, "仓库调整单保存失败");
-															}
+															//if (BusinessList.Count > 0)
+															//{
+															//	var resultList = DataTableBusiness.SavaBusinessData_SqlParameter(BusinessList, ListNameInfoYANSHOU);
+															//	if (resultList)
+															//	{
+															//		string sql = string.Format("UPDATE " + TableName + " SET JE=(SELECT SUM(JE) FROM " + TableName + "MX WHERE DJBH='{0}')" +
+															//		",SL=(SELECT SUM(SL) FROM  " + TableName + "MX WHERE DJBH='{0}')WHERE DJBH='{0}'", DJBH);
+															//		testDbManager.ExecuteNonQuery(sql);
+															//		LogUtil.WriteInfo(this, string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH), string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH));
+															//	}
+															//	else
+															//	{
+															//		LogUtil.WriteError(this, "仓库调整单保存失败");
+															//	}
+															//}
+															//else
+															//{
+															//	LogUtil.WriteError(this, "仓库调整单保存失败");
+															//}
 														}
 													}
 													catch (Exception ex)
@@ -399,11 +402,11 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 						}
 						try
 						{
-							if (dataTable3.Rows.Count > 0 && dbOperation.SqlBulkCopy(dataTable3, "storeskulist"))
+							if (dataTable3.Rows.Count > 0 && testDbManager.SqlBulkCopy(dataTable3, "storeskulist"))
 							{
 								text = string.Format(@"insert into storesku(storeid,taobao_user_nick,previewid,nextid) values('{0}','{1}','{2}','{3}')",
-									skuInfoList[0].StoreId, current["taobao_user_nick"].ToString(), text2, text3);
-								dbOperation.ExecuteNonQuery(text);
+									skuInfoList[0].StoreId, current_Token.taobao_user_nick.ToString(), text2, text3);
+								testDbManager.ExecuteNonQuery(text);
 							}
 						}
 						catch (Exception ex)
@@ -420,6 +423,21 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 				{
 					LogUtil.WriteError(this, "SetSearchOnlineGoodsInfo error:" + ex.Message);
 				}
+			}
+		}
+		public string BillType
+		{
+			get
+			{
+				return "分页查询门店sku列表";
+			}
+		}
+
+		public string Description
+		{
+			get
+			{
+				return "分⻚查询⻔店sku列表";
 			}
 		}
 	}

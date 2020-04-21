@@ -43,7 +43,8 @@ namespace HangFire.Demo1
             services.Configure<RedisConnections>(configuration.GetSection("RedisConnections"));
             services.AddScoped<ITestDbManager,TestDbManager>();
             services.AddScoped<IOfficalDbManager, OfficalDbManager>();
-            services.AddScoped<RedisHelpr>();
+            services.AddScoped<RedisHelper>();
+            services.AddSingleton<ConfigUtil>();
             services.AddMemoryCache();
             services.AddHangfireServer();
             services.AddControllers(); 
