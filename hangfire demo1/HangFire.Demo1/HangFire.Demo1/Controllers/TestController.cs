@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
+using HangFire.Demo1.Filters;
 
 namespace HangFire.Demo1.Controllers
 {
@@ -27,6 +28,7 @@ namespace HangFire.Demo1.Controllers
             this.officalDbManager = officalDbManager;
         }
 
+        [ServiceFilter(typeof(TestApiActionFilterAttribute), IsReusable = true)]
         [HttpGet("getspmc/{spdm}")]
         public string getspmc([FromRoute]string spdm) 
         {

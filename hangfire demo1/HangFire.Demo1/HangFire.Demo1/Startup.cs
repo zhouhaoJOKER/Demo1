@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Hangfire;
 using Hangfire.SqlServer;
 using HangFire.Demo1.Models.commom;
+using HangFire.Demo1.Filters;
 
 namespace HangFire.Demo1
 {
@@ -45,6 +46,8 @@ namespace HangFire.Demo1
             services.AddScoped<IOfficalDbManager, OfficalDbManager>();
             services.AddScoped<RedisHelper>();
             services.AddSingleton<ConfigUtil>();
+            //Ìí¼Óactionfilterattribute ¹ýÂËÆ÷
+            services.AddScoped(typeof(TestApiActionFilterAttribute));
             services.AddMemoryCache();
             services.AddHangfireServer();
             services.AddControllers(); 
