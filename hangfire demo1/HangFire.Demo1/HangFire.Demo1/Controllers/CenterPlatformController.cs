@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HangFire.Demo1.Controllers
 {
-    [Route("api/{controller}")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CenterPlatformController : ControllerBase
     {

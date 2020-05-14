@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HangFire.Demo1.Controllers
 {
-    [Route("api/{controller}")]
+    [Route("api/[controller]")]
     [ApiController]
     public class LoggerTestController : ControllerBase
     {
@@ -17,6 +17,7 @@ namespace HangFire.Demo1.Controllers
         {
             this.logger = logger;
         }
+        [HttpGet]
         public void Index() 
         {
             this.logger.LogInformation("joker");

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HangFire.Demo1.Controllers
 {
-    [Route("api/{controller}")]
+    [Route("api/[controller]")]
     [ApiController]
     public class RedisTestController : ControllerBase
     {
@@ -17,6 +17,7 @@ namespace HangFire.Demo1.Controllers
         {
             this.redisHelpr = redisHelpr;
         }
+        [HttpGet()]
         public string Index() 
         {
             return "joker";
@@ -27,14 +28,14 @@ namespace HangFire.Demo1.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet(nameof(SetString)+"/{name}")]
-        public string SetString([FromRoute]string name) 
+        [HttpGet(nameof(SetString) + "/{name}")]
+        public string SetString([FromRoute]string name)
         {
             return redisHelpr.SetString(name);
         }
 
-        [HttpGet(nameof(GetString)+"/{name}")]
-        public string GetString([FromRoute]string name) 
+        [HttpGet(nameof(GetString) + "/{name}")]
+        public string GetString([FromRoute]string name)
         {
             string result = "";
             result = redisHelpr.GetString(name);

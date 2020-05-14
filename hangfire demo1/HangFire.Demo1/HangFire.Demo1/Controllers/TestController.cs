@@ -11,7 +11,8 @@ using HangFire.Demo1.Filters;
 
 namespace HangFire.Demo1.Controllers
 {
-    [Route("api/{controller}")]
+    //[TestControllerActionFilter]
+    [Route("api/[controller]")]
     [ApiController]
     public class TestController : ControllerBase
     {
@@ -28,6 +29,7 @@ namespace HangFire.Demo1.Controllers
             this.officalDbManager = officalDbManager;
         }
 
+        //这个方式的话 是为了注入其他的服务比如 Ilogger
         [ServiceFilter(typeof(TestApiActionFilterAttribute), IsReusable = true)]
         [HttpGet("getspmc/{spdm}")]
         public string getspmc([FromRoute]string spdm) 
@@ -38,6 +40,7 @@ namespace HangFire.Demo1.Controllers
             }
             string MyKey = $"SPDM:{spdm}";
             string spmc = "";
+            
             if (!memoryCache.TryGetValue(MyKey, out spmc))
             {
                 // Key not in cache, so get data.
@@ -60,9 +63,11 @@ namespace HangFire.Demo1.Controllers
             return spmc;
         }
 
+        [TestTwoActionFilter]
         [HttpGet("getInfo")]
         public string getInfo() 
         {
+            Console.WriteLine("执行方法");
             string sql = "select top 100 spdm,spmc from shangpin";
             var spdms = testDbManager.FillData(sql);
             return JsonConvert.SerializeObject(spdms);

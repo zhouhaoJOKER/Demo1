@@ -16,5 +16,7 @@ namespace HangFire.Demo1.Models.commom
         object ExecuteScalarByParam(string cmdtext, SqlParameter[] param);
 
         bool SqlBulkCopy(DataTable sourceTable, string tableName);
+
+        bool DataSetInsertSource(List<string> strSQL, List<string> tableName, DataSet source, List<Dictionary<string, SqlParameter[]>> SqlParameter);
     }
 }

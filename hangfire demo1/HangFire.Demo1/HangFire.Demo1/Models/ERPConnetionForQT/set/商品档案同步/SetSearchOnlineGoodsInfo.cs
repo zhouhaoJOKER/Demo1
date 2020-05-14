@@ -327,17 +327,17 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 																shopinfo.SL = dataRow3["current_amount"].ToString();
 																shopinfo.ZDR = "QT";
 																dic = DataTableBusiness.SetBusinessDataTable<Regulation>(shopinfo, TableName, "Regulation", TableName, out DJBH);
-																//dicMX = DataTableBusiness.SetEntryOrderDetail_QT_2(DJBH, TableName, dataRow3, dataRow3["store_id"].ToString());
-																//YanShouInfo infoYS = new YanShouInfo();
-																//try
-																//{
-																//	infoYS = InvoicesManage.GetYsInfo(DJBH, TableName, "P_API_Oper_CKTZD_SH", "QT");
-																//}
-																//catch (Exception ex)
-																//{
-																//	LogUtil.WriteError(this, "库存调整单 执行失败P_API_Oper_CKTZD_SH ;DJBH:" + DJBH);
-																//}
-																//ListNameInfoYANSHOU.Add(infoYS);
+																dicMX = DataTableBusiness.SetEntryOrderDetail_QT_2(DJBH, TableName, dataRow3, dataRow3["store_id"].ToString());
+																YanShouInfo infoYS = new YanShouInfo();
+																try
+																{
+																	infoYS = InvoicesManage.GetYsInfo(DJBH, TableName, "P_API_Oper_CKTZD_SH", "QT");
+																}
+																catch (Exception ex)
+																{
+																	LogUtil.WriteError(this, "库存调整单 执行失败P_API_Oper_CKTZD_SH ;DJBH:" + DJBH);
+																}
+																ListNameInfoYANSHOU.Add(infoYS);
 															}
 															if (dic.Count > 0 || dicMX.Count > 0)
 															{
@@ -347,25 +347,25 @@ namespace HangFire.Demo1.Models.ERPConnetionForQT.set
 																	BusinessList.Add(dicMX);
 																}
 															}
-															//if (BusinessList.Count > 0)
-															//{
-															//	var resultList = DataTableBusiness.SavaBusinessData_SqlParameter(BusinessList, ListNameInfoYANSHOU);
-															//	if (resultList)
-															//	{
-															//		string sql = string.Format("UPDATE " + TableName + " SET JE=(SELECT SUM(JE) FROM " + TableName + "MX WHERE DJBH='{0}')" +
-															//		",SL=(SELECT SUM(SL) FROM  " + TableName + "MX WHERE DJBH='{0}')WHERE DJBH='{0}'", DJBH);
-															//		testDbManager.ExecuteNonQuery(sql);
-															//		LogUtil.WriteInfo(this, string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH), string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH));
-															//	}
-															//	else
-															//	{
-															//		LogUtil.WriteError(this, "仓库调整单保存失败");
-															//	}
-															//}
-															//else
-															//{
-															//	LogUtil.WriteError(this, "仓库调整单保存失败");
-															//}
+															if (BusinessList.Count > 0)
+															{
+																var resultList = DataTableBusiness.SavaBusinessData_SqlParameter(BusinessList, ListNameInfoYANSHOU);
+																if (resultList)
+																{
+																	string sql = string.Format("UPDATE " + TableName + " SET JE=(SELECT SUM(JE) FROM " + TableName + "MX WHERE DJBH='{0}')" +
+																	",SL=(SELECT SUM(SL) FROM  " + TableName + "MX WHERE DJBH='{0}')WHERE DJBH='{0}'", DJBH);
+																	testDbManager.ExecuteNonQuery(sql);
+																	LogUtil.WriteInfo(this, string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH), string.Format(@"ERP业务单据{0}创建成功!对应的电商系统的调整单号:{1}保存成功", DJBH, DJBH));
+																}
+																else
+																{
+																	LogUtil.WriteError(this, "仓库调整单保存失败");
+																}
+															}
+															else
+															{
+																LogUtil.WriteError(this, "仓库调整单保存失败");
+															}
 														}
 													}
 													catch (Exception ex)

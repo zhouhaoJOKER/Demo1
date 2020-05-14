@@ -1,4 +1,5 @@
 ﻿using HangFire.Demo1.Models.CenterPlatform;
+using HangFire.Demo1.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -122,6 +123,44 @@ namespace HangFire.Demo1.Models.commom
                 return "";
             }
         }
+        /// <summary>
+        /// 取客户表中信息
+        /// </summary>
+        /// <param name="Fild">字段</param>
+        /// <param name="TableName">表</param>
+        /// <returns></returns>
+        public static string GetKEHUValue(string Fild, string SDDM)
+        {
+
+            try
+            {
+                string sql = string.Format("select {0} from KEHU where KHDM='{1}'", Fild, SDDM);
+                var data = _testDbManager.ExecuteScalar(sql);
+                if (data != null)
+                {
+                    return data.ToString();
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        public static YanShouInfo GetYsInfo(string djbh, string table, string Procedure, string user)
+        {
+            YanShouInfo info = new YanShouInfo();
+            info.DJBH = djbh;
+            info.TableName = table;
+            info.User = user;
+            info.Procedure = Procedure;
+            return info;
+        }
+
         /// <summary>
         /// 生成单据编号
         /// </summary>
@@ -328,6 +367,28 @@ namespace HangFire.Demo1.Models.commom
             sb.AppendFormat(" FROM {0} ", tablename);
             sb.AppendFormat(" WHERE 1=2 ");
             return sb.ToString();
+        }
+
+        public static DataTable SetDataTable(List<Dictionary<string, object>> list, string Type)
+        {
+            DataTable pdt = new DataTable(Type);
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (i == 0)
+                {
+                    foreach (var item in list[i])
+                    {
+                        pdt.Columns.Add(item.Key, typeof(string));
+                    }
+                }
+                DataRow dr = pdt.NewRow();
+                foreach (var item in list[i])
+                {
+                    dr[item.Key] = item.Value;
+                }
+                pdt.Rows.Add(dr);
+            }
+            return pdt;
         }
     }
 }

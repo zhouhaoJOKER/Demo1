@@ -12,6 +12,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using HangFire.Demo1.Models.commom;
 using HangFire.Demo1.Filters;
+using Microsoft.OpenApi.Models;
 
 namespace HangFire.Demo1
 {
@@ -46,11 +47,20 @@ namespace HangFire.Demo1
             services.AddScoped<IOfficalDbManager, OfficalDbManager>();
             services.AddScoped<RedisHelper>();
             services.AddSingleton<ConfigUtil>();
-            //添加actionfilterattribute 过滤器
+            //添加actionfilterattribute添加注入 是为了方便注入了Ilogger ，因为我们的[TestApiActionFilterAttribute]构造函数中 需要logger
             services.AddScoped(typeof(TestApiActionFilterAttribute));
+            services.AddDistributedMemoryCache();
             services.AddMemoryCache();
             services.AddHangfireServer();
-            services.AddControllers(); 
+
+            services.AddControllers(options=> {
+                //添加actionfilterattribute 过滤器 全局注册
+                options.Filters.Add(typeof(TestGlobalActionFilterAttribute));
+            });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +73,15 @@ namespace HangFire.Demo1
             app.UseStaticFiles();
             app.UseHangfireDashboard();
 
-            app.UseRouting(); 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = "";
+            });
+
+            app.UseRouting();
+            
             app.UseEndpoints(endpoints =>
             {
                 //这个可以不需要

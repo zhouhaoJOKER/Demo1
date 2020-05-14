@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -144,6 +145,77 @@ namespace HangFire.Demo1.Models.commom
                 connection.Close();
             }
 
+            return result;
+        }
+
+        public bool DataSetInsertSource(List<string> strSQL, List<string> tableName, DataSet source, List<Dictionary<string, SqlParameter[]>> SqlParameter)
+        {
+
+            bool result = false;
+            IDbConnection connection = null;
+            connection = new SqlConnection(DefaultConnections.localDb.ToString());
+            IDbTransaction transaction = connection.BeginTransaction();
+             
+            try
+            {
+                for (int i = 0; i < source.Tables.Count; i++)
+                {
+                    foreach (DataRow row in source.Tables[i].Rows)
+                    {
+                        if (row.RowState == DataRowState.Unchanged)
+                        {
+                            row.SetAdded();
+                        }
+                    }
+                    var sql = strSQL[i];
+                    var tableNameinfo = tableName[i];
+                    using (IDbCommand command = CreateCommand(sql, connection))
+                    {
+                        command.Transaction = transaction;
+                        command.CommandTimeout = 60 * 60;
+                        DbDataAdapter adapter = new SqlDataAdapter((SqlCommand)command); 
+                        int count = adapter.Update(source, tableNameinfo);
+                        source.AcceptChanges();
+                        command.Dispose();
+                    }
+                }
+                for (int i = 0; i < SqlParameter.Count; i++)
+                {
+                    SqlParameter temp = null;
+                    foreach (var sqlitem in SqlParameter[i])
+                    {
+                        using (IDbCommand command = CreateCommand(sqlitem.Key.ToString(), connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Transaction = transaction;
+                            command.CommandTimeout = 60 * 60;
+                            foreach (SqlParameter param in sqlitem.Value)
+                            {
+                                if (param.Direction == ParameterDirection.Output)
+                                {
+                                    temp = param;
+                                }
+                                command.Parameters.Add(param);
+                            }
+                            command.ExecuteNonQuery();
+
+                            command.Dispose();
+
+                        }
+                    }
+                }
+                transaction.Commit();
+                result = true;
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                throw e;
+            }
+            finally
+            {
+                connection.Close();
+            }
             return result;
         }
     }

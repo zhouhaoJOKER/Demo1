@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace HangFire.Demo1.Controllers
 {
-    [Route("api/{controller}")]
+    [Route("api/[controller]")]
     [ApiController]
     public class HomeController : ControllerBase
     {

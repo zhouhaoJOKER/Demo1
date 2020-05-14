@@ -3,6 +3,7 @@ using HangFire.Demo1.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,58 @@ namespace HangFire.Demo1.Models.commom
         {
             _testDbManager = testDbManager;
         }
+
+        public static Dictionary<string, object> SetInvoicesBusiness<T>(T t, string TableName, string objectName, string ObjectType, string djbh) where T : class
+        {
+            var sql = string.Empty;
+            Dictionary<string, object> ListName = null;
+
+            switch (objectName)
+            { 
+                case "PurchaseDetail":
+                    {
+                        PurchaseDetail sggatherings = t as PurchaseDetail;
+                        ListName = RequestBuilder.getProperties<PurchaseDetail>(sggatherings, objectName);
+                        break;
+                    }  
+            }
+            return ListName;
+        }
+
+        public static bool SavaBusinessData_SqlParameter(List<Dictionary<string, DataTable>> BusinessList, List<YanShouInfo> ListName)
+        {
+            var result = false;
+            List<string> sqllist = new List<string>();
+            DataSet ds = new DataSet();
+            List<string> TableNameList = new List<string>();
+
+            for (int i = 0; i < BusinessList.Count; i++)
+            {
+                foreach (var item in BusinessList[i])
+                {
+                    TableNameList.Add(item.Value.TableName);
+                    sqllist.Add(item.Key);
+                    ds.Tables.Add(item.Value);
+                }
+            }
+            List<Dictionary<string, SqlParameter[]>> sqlparam = new List<Dictionary<string, SqlParameter[]>>(); 
+            List<string> OrclTableName = new List<string>();
+            for (int i = 0; i < ListName.Count; i++)
+            {
+                Dictionary<string, SqlParameter[]> parm = new Dictionary<string, SqlParameter[]>();
+                StoredProc storeProc = new StoredProc("", null);
+                var DJBH = ListName[i].DJBH;
+                var User = ListName[i].User;
+                storeProc.AddParameter("@DJBH", SqlDbType.VarChar, 20, ParameterDirection.Input, DJBH);
+                storeProc.AddParameter("@USER", SqlDbType.VarChar, 50, ParameterDirection.Input, User);
+                storeProc.AddParameter("@iRet", SqlDbType.Int, ParameterDirection.Output);
+                parm.Add(ListName[i].Procedure, storeProc.getSqlParameter());
+                sqlparam.Add(parm);
+            }
+            result = _testDbManager.DataSetInsertSource(sqllist, TableNameList, ds, sqlparam);
+            return result;
+        }
+
         public static Dictionary<string, DataTable> SetBusinessDataTable<T>(T t, string TableName, string objectName, string Upstream, out string DJBH) where T : class
         {
             var sql = string.Empty;
@@ -71,63 +124,82 @@ namespace HangFire.Demo1.Models.commom
             return dic;
         }
 
-        //public static Dictionary<string, DataTable> SetEntryOrderDetail_QT_2(string DJBH, string TableName, DataRow dataRow, string KHDM)
-        //{
-        //    int num = 0;
-        //    Dictionary<string, DataTable> dictionary = new Dictionary<string, DataTable>();
-        //    List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
-        //    string text = string.Empty;
-        //    Dictionary<string, DataTable> result;
-        //    try
-        //    {
-        //        string sql = string.Format(@"SELECT TOP 1 TMDZB.SPDM,TMDZB.GG1DM,TMDZB.GG2DM FROM dbo.TMDZB WHERE SPDM='{0}' AND SPTM='{1}' ", dataRow["item_id"], dataRow["sku_id"]);
-        //        DataTable dataTable = _testDbManager.FillData(sql);
-                
-        //        string sPDM = string.Empty;
-        //        string gG1DM = string.Empty;
-        //        string gG2DM = string.Empty;
-        //        sPDM = dataTable.Rows[0]["SPDM"].ToString();
-        //        gG1DM = ((dataTable.Rows[0]["GG1DM"].ToString() == "") ? _testDbManager.ExecuteScalar("select top 1 GGDM from guige1").ToString() : dataTable.Rows[0]["GG1DM"].ToString());
-        //        gG2DM = ((dataTable.Rows[0]["GG2DM"].ToString() == "") ? _testDbManager.ExecuteScalar("select top 1 GGDM from guige2").ToString() : dataTable.Rows[0]["GG2DM"].ToString());
-        //        PurchaseDetail purchaseDetail = new PurchaseDetail();
-        //        purchaseDetail.DJBH = DJBH;
-        //        purchaseDetail.SPDM = sPDM;
-        //        purchaseDetail.GG1DM = gG1DM;
-        //        purchaseDetail.GG2DM = gG2DM;
-        //        purchaseDetail.SL = dataRow["current_amount"].ToString();
-        //        purchaseDetail.SL_2 = dataRow["current_amount"].ToString();
-        //        purchaseDetail.DJ = (Convert.ToDouble(dataRow["item_price"]) / 100).ToString();
-        //        purchaseDetail.CKJ = (Convert.ToDouble(dataRow["item_price"]) / 100).ToString();
-        //        purchaseDetail.ZK = "1.00";
-        //        purchaseDetail.JE = (Convert.ToDouble(dataRow["current_amount"].ToString()) * Convert.ToDouble(dataRow["item_price"])).ToString();
-        //        purchaseDetail.byzd8 = InvoicesManage.GetKEHUValue("BYZD8", KHDM);
-        //        if (string.IsNullOrEmpty(purchaseDetail.byzd8))
-        //        {
-        //            purchaseDetail.byzd8 = "0.00";
-        //        }
-        //        purchaseDetail.byzd9 = (Convert.ToDouble(purchaseDetail.JE) * (1.0 - Convert.ToDouble(purchaseDetail.byzd8))).ToString();
-        //        purchaseDetail.BYZD12 = purchaseDetail.CKJ;
-        //        num++;
-        //        purchaseDetail.MIBH = num;
-        //        purchaseDetail.MXBH = num;
-        //        purchaseDetail.HH = "1";
-        //        purchaseDetail.byzd1 = "0";
-        //        purchaseDetail.DJ_1 = purchaseDetail.CKJ;
-        //        Dictionary<string, object> item = DataTableBusiness.SetInvoicesBusiness<PurchaseDetail>(purchaseDetail, TableName, "PurchaseDetail", "", "");
-        //        if (string.IsNullOrEmpty(text))
-        //        {
-        //            text = DataTableBusiness.SetInvoicesBusiness<PurchaseDetail>(purchaseDetail, TableName + "MX", "PurchaseDetail", DJBH);
-        //        }
-        //        list.Add(item);
-        //        DataTable value = InvoicesManage.SetDataTable(list, TableName + "MX");
-        //        dictionary.Add(text, value);
-        //        result = dictionary;
-        //    }
-        //    catch (Exception ex)
-        //    {
-                 
-        //    }
-        //    return result;
-        //}
+        public static Dictionary<string, DataTable> SetEntryOrderDetail_QT_2(string DJBH, string TableName, DataRow dataRow, string KHDM)
+        {
+            int num = 0;
+            Dictionary<string, DataTable> dictionary = new Dictionary<string, DataTable>();
+            List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+            string text = string.Empty;
+            Dictionary<string, DataTable> result = null;
+            try
+            {
+                string sql = string.Format(@"SELECT TOP 1 TMDZB.SPDM,TMDZB.GG1DM,TMDZB.GG2DM FROM dbo.TMDZB WHERE SPDM='{0}' AND SPTM='{1}' ", dataRow["item_id"], dataRow["sku_id"]);
+                DataTable dataTable = _testDbManager.FillData(sql);
+
+                string sPDM = string.Empty;
+                string gG1DM = string.Empty;
+                string gG2DM = string.Empty;
+                sPDM = dataTable.Rows[0]["SPDM"].ToString();
+                gG1DM = ((dataTable.Rows[0]["GG1DM"].ToString() == "") ? _testDbManager.ExecuteScalar("select top 1 GGDM from guige1").ToString() : dataTable.Rows[0]["GG1DM"].ToString());
+                gG2DM = ((dataTable.Rows[0]["GG2DM"].ToString() == "") ? _testDbManager.ExecuteScalar("select top 1 GGDM from guige2").ToString() : dataTable.Rows[0]["GG2DM"].ToString());
+                PurchaseDetail purchaseDetail = new PurchaseDetail();
+                purchaseDetail.DJBH = DJBH;
+                purchaseDetail.SPDM = sPDM;
+                purchaseDetail.GG1DM = gG1DM;
+                purchaseDetail.GG2DM = gG2DM;
+                purchaseDetail.SL = dataRow["current_amount"].ToString();
+                purchaseDetail.SL_2 = dataRow["current_amount"].ToString();
+                purchaseDetail.DJ = (Convert.ToDouble(dataRow["item_price"]) / 100).ToString();
+                purchaseDetail.CKJ = (Convert.ToDouble(dataRow["item_price"]) / 100).ToString();
+                purchaseDetail.ZK = "1.00";
+                purchaseDetail.JE = (Convert.ToDouble(dataRow["current_amount"].ToString()) * Convert.ToDouble(dataRow["item_price"])).ToString();
+                purchaseDetail.byzd8 = InvoicesManage.GetKEHUValue("BYZD8", KHDM);
+                if (string.IsNullOrEmpty(purchaseDetail.byzd8))
+                {
+                    purchaseDetail.byzd8 = "0.00";
+                }
+                purchaseDetail.byzd9 = (Convert.ToDouble(purchaseDetail.JE) * (1.0 - Convert.ToDouble(purchaseDetail.byzd8))).ToString();
+                purchaseDetail.BYZD12 = purchaseDetail.CKJ;
+                num++;
+                purchaseDetail.MIBH = num;
+                purchaseDetail.MXBH = num;
+                purchaseDetail.HH = "1";
+                purchaseDetail.byzd1 = "0";
+                purchaseDetail.DJ_1 = purchaseDetail.CKJ;
+                Dictionary<string, object> item = DataTableBusiness.SetInvoicesBusiness<PurchaseDetail>(purchaseDetail, TableName, "PurchaseDetail", "", "");
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = DataTableBusiness.SetInvoicesBusiness<PurchaseDetail>(purchaseDetail, TableName + "MX", "PurchaseDetail", DJBH);
+                }
+                list.Add(item);
+                DataTable value = InvoicesManage.SetDataTable(list, TableName + "MX");
+                dictionary.Add(text, value);
+                result = dictionary;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return result;
+        }
+
+        public static string SetInvoicesBusiness<T>(T t, string TableName, string objectName, string DJBH) where T : class
+        {
+            var sql = string.Empty;
+
+            Dictionary<string, object> ListName = null;
+
+            switch (objectName)
+            {
+                case "PurchaseDetail":
+                    {
+                        PurchaseDetail sggatherings = t as PurchaseDetail;
+                        ListName = RequestBuilder.getProperties<PurchaseDetail>(sggatherings, objectName);
+                        break;
+                    } 
+            }
+            sql = InvoicesManage.SetSQLValue(ListName, TableName, DJBH, "");
+            return sql;
+        }
     }
 }
