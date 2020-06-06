@@ -13,6 +13,7 @@ using Hangfire.SqlServer;
 using HangFire.Demo1.Models.commom;
 using HangFire.Demo1.Filters;
 using Microsoft.OpenApi.Models;
+using HangFire.Demo1.DBHelpers;
 
 namespace HangFire.Demo1
 {
@@ -52,7 +53,7 @@ namespace HangFire.Demo1
             services.AddDistributedMemoryCache();
             services.AddMemoryCache();
             services.AddHangfireServer();
-
+            services.AddSingleton<DBHelper>();
             services.AddControllers(options=> {
                 //添加actionfilterattribute 过滤器 全局注册
                 options.Filters.Add(typeof(TestGlobalActionFilterAttribute));

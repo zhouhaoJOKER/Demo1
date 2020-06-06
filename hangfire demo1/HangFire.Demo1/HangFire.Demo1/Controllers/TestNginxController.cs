@@ -10,6 +10,7 @@ namespace HangFire.Demo1.Controllers
     [ApiController]
     public class TestNginxController : ControllerBase
     {
+        [HttpGet]
         public string Index() 
         {
             return "Frist Test ActionIndex";
